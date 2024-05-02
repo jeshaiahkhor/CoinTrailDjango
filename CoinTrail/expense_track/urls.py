@@ -4,7 +4,9 @@ from . import views
 
 urlpatterns = [
     # ex: /expense_track/
-    path("", views.index, name="index"),
+    path("transactions/", views.index, name="index"),
     # ex: /expense_track/5/details
-    path("<int:transaction_id>/", views.details, name="details"),
+    path("transactions/<int:transaction_id>/", views.details, name="details"),
+    # ex: /expense_track/summary
+    path("summary/", views.summary, name="summary")
 ]

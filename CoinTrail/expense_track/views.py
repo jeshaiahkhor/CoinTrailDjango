@@ -4,14 +4,20 @@ from django.shortcuts import get_object_or_404, render
 from .models import Transaction
 
 
+# Shows an index of the most recent 5 transactions.
 def index(request):
     latest_transaction_list = Transaction.objects.order_by("-date")[:5]
     context = {"latest_transaction_list": latest_transaction_list}
     return render(request, "expense_track/index.html", context)
 
 
+# Shows the expanded details of a single transaction.
 def details(request, transaction_id):
     transaction = get_object_or_404(Transaction, pk=transaction_id)
     return render(request, "expense_track/details.html",
                   {"transaction": transaction.details()}, content_type="text/plain")
-# Create your views here.
+
+
+def summary(request):
+    full_transaction_list = Transaction.objects.sort_from_account("MAE")
+    return HttpResponse(full_transaction_list)
