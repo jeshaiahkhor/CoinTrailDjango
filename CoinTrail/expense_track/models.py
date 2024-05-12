@@ -7,20 +7,22 @@ from django.core.validators import MinValueValidator
 from django.db.models import Sum
 
 
-# Create your models here.
-
-
 # Creates a model manager for transactions
 class TransactionManager(models.Manager):
     # Gets the total expenses incurred to date
-    def sort_from_account(self, from_account):
-        return self.filter(from_account=from_account).aggregate(expense=Sum("expense", default=0))["expense"]
+    def sort_income_accounts(self, income_account):
+        return self.filter(income_account=income_account).aggregate(expense=Sum("expense", default=0))["expense"]
+
+    # Lists all the income accounts found in the transaction history.
+    def get_income_accounts(self):
+        all_income_accounts = set(self.values_list('income_account', flat=True))    # set() here removes duplicates.
+        return all_income_accounts
 
 
 # Transaction class to handle new transactions
 class Transaction(models.Model):
     date = models.DateTimeField(default=timezone.now, blank=False)
-    from_account = models.CharField(blank=False, max_length=100)
+    income_account = models.CharField(blank=False, max_length=100)
     expense = models.DecimalField(
         default=10,
         blank=False,
@@ -37,7 +39,7 @@ class Transaction(models.Model):
     )
 
     description = models.CharField(blank=True, max_length=200)
-    to_account = models.CharField(blank=False, max_length=100)
+    expense_account = models.CharField(blank=False, max_length=100)
     category = models.CharField(blank=True, max_length=100)
     subcategory = models.CharField(blank=True, max_length=100)
 
@@ -53,12 +55,12 @@ class Transaction(models.Model):
         output = (
                 "Transaction: " + str(self.id)
                 + "\nDate: " + self.date.strftime("%d/%m/%Y")
-                + "\nFrom account: " + self.from_account
+                + "\nIncome account: " + self.income_account
                 + "\nExpense: " + str(self.expense)
                 + "\nIncome: " + str(self.income)
                 + "\nTotal: " + str(self.get_total())
                 + "\nDescription: " + self.description
-                + "\nTo account: " + self.to_account
+                + "\nExpense account: " + self.expense_account
                 + "\nCategory: " + self.category
                 + "\nSubcategory: " + self.subcategory
         )

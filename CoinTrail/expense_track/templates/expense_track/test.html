@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon_3.png' %}">
+    <title>Title</title>
+</head>
+
+<body>
+    <form action="{% url 'expense_track:test' %}" method="post">
+{% csrf_token %}
+<fieldset>
+    <legend><h1>Pick an account to view.</h1></legend>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    {% for account in income_accounts %}
+        <input type="radio" name="account" id="account{{ forloop.counter }}" value="{{ account }}">
+        <label for="account{{ forloop.counter }}">{{ account }}</label><br>
+    {% endfor %}
+</fieldset>
+<input type="submit" value="Vote">
+</form>
+</body>
+</html>

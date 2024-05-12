@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Index Page</title>
+    <meta charset="UTF-8">
     {% load static %}
-  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon_3.png' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon_3.png' %}">
+    <title>Title</title>
 </head>
+
 <body>
 
 {% if latest_transaction_list %}
     <ul>
     {% for transaction in latest_transaction_list %}
-        <li><a href="/transactions/{{ transaction.id }}/">{{ transaction }}</a></li>
+        <li><a href="{% url 'expense_track:details' transaction.id %}">{{ transaction }}</a></li>
     {% endfor %}
     </ul>
 {% else %}

@@ -13,11 +13,16 @@ def index(request):
 
 # Shows the expanded details of a single transaction.
 def details(request, transaction_id):
-    transaction = get_object_or_404(Transaction, pk=transaction_id)
+    selected_transaction = get_object_or_404(Transaction, pk=transaction_id)
     return render(request, "expense_track/details.html",
-                  {"transaction": transaction.details()}, content_type="text/plain")
+                  {"transaction": selected_transaction.details}, content_type="text/plain")
 
 
 def summary(request):
-    full_transaction_list = Transaction.objects.sort_from_account("MAE")
+    full_transaction_list = Transaction.objects.sort_income_accounts("MAE")
     return HttpResponse(full_transaction_list)
+
+
+def test(request):
+    return render(request, "expense_track/test.html",
+                  {"income_accounts": Transaction.objects.get_income_accounts()})
